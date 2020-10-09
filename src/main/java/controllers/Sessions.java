@@ -9,26 +9,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 
-@Path("Users/")
+@Path("Sessions/")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.APPLICATION_JSON)
 
-public class User {
+public class Sessions {
 
     @GET
-    @Path("get/{UserID}")
-    public String getUser(@PathParam("UserID") Integer UserID) {
-        System.out.println("Invoked User.getUser() with UserID " + UserID);
+    @Path("get/{SessionID}")
+    public String getSessions(@PathParam("SessionID") Integer SessionID) {
+        System.out.println("Invoked Session.getSessionID() with SessionID " + SessionID);
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT ? FROM Users ");
-            ps.setInt(1, UserID);
+            PreparedStatement ps = Main.db.prepareStatement("SELECT ? FROM Sessions");
+            ps.setInt(1, SessionID);
             ResultSet results = ps.executeQuery();
             JSONObject response = new JSONObject();
             if (results.next() == true) {
-                response.put("UserID", UserID);
-
-
-
+                response.put("SessionID", SessionID);
             }
             return response.toString();
         } catch (Exception exception) {

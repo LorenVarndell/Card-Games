@@ -8,7 +8,7 @@ function getSessionCode(){
     console.log("Fetching session code");
 
     const SessionID = document.getElementById("SessionID").value;
-    const url = "/Session/SessionID/";
+    const url = "/Sessions/get/";
 
     fetch(url + SessionID, {
         method: "GET",
