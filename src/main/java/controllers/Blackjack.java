@@ -9,24 +9,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 
-@Path("Sessions/")
+@Path("Blackjack/")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.APPLICATION_JSON)
 
-public class Sessions {
+public class Blackjack {
 
     @GET
     @Path("get/{SessionID}")
     public String getSessions(@PathParam("SessionID") Integer SessionID) {
         System.out.println("Invoked Session.getSessionID() with SessionID " + SessionID);
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Sessions WHERE SessionID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Blackjack WHERE SessionID = ?");
             ps.setInt(1, SessionID);
             ResultSet results = ps.executeQuery();
             JSONObject response = new JSONObject();
             if (results.next() == true) {
-                response.put("SessionID", SessionID);
-                response.put("Game", results.getString(2));
+                response.put("BlackjackSessionID", results.getString(1));
+                response.put("Cards",results.getString(2));
+                response.put("Start",results.getString(3));
             }
             return response.toString();
         } catch (Exception exception) {
