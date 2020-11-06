@@ -2,6 +2,29 @@ function pageLoad() {
 
     document.getElementById("getBlackjackSession").addEventListener("click", getBlackjackSessionCode);
     document.getElementById("createBlackjackSession").addEventListener("click", createBlackjackSessionCode);
+    console.log("Creating cookie/UserID");
+
+
+    var url = "/Users/add";
+    fetch(url, {
+        method: "POST",
+    }).then(response => {
+        return response.json()
+    }).then(response => {
+        if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
+            alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
+        } else {
+            console.log(localStorage.getItem("UserID"));
+            //Cookies.set("UserID",response.UserID);
+            if (localStorage.getItem("UserID") === null) {
+                localStorage.setItem("UserID", response.UserID);
+            }
+            console.log("Cookie set")
+        }
+    });
+
+
+
 }
 
 
@@ -46,3 +69,4 @@ function createBlackjackSessionCode(){
     });
 
 }
+
