@@ -1,6 +1,5 @@
 package controllers;
 
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
 import server.Main;
 
@@ -10,7 +9,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 @Path("Users/")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
