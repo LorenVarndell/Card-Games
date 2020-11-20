@@ -3,10 +3,7 @@ package controllers;
 import org.json.simple.JSONObject;
 import server.Main;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 
@@ -19,7 +16,7 @@ import java.sql.PreparedStatement;
 public class Users {
     @POST
     @Path("add")
-    public String SessionAdd() {
+    public String UserIDAdd() {
         int random_int = (int) (Math.random() * (9999999 - 999999 + 1) + 999999);
         // String random_intTotal = Integer.toString(random_int) + "" + Integer.toString(random_int2);
         //System.out.println(random_intTotal);

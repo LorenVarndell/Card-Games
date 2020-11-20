@@ -8,13 +8,19 @@
     <title>Blackjack</title>
 </head>
 <body onload="pageLoad()">
-    <h1> Enter Session Code for Blackjack</h1>
-    <h1><input type="text" id="getBlackjackSessionID"></h1>
-    <h1><button id="getBlackjackSession">Enter</button></h1>
-    <h1> Create Blackjack Session</h1>
-    <form id="formCreateBlackjackSession">
-    </form>
-    <h1><button id="createBlackjackSession">Enter</button></h1>
+    <div class="inputs" id="inputs">
+        <h1> Enter Session Code for Blackjack</h1>
+        <h1><input type="text" id="getBlackjackSessionID"></h1>
+        <h1><button id="getBlackjackSession">Enter</button></h1>
+        <h1> Create Blackjack Session</h1>
+        <form id="formCreateBlackjackSession"></form>
+        <h1><button id="createBlackjackSession">Enter</button></h1>
+    </div>
+    <div id="game">
+        <canvas id="myCanvas" width="200" height="100" style="border:1px solid">
+
+        </canvas>
+    </div>
 </body>
 </html>
 

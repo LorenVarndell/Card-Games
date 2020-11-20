@@ -28,11 +28,14 @@ public class Blackjack {
                 response.put("BlackjackSessionID", results.getString(1));
                 response.put("Cards",results.getString(2));
                 response.put("Start",results.getString(3));
+            } else {
+                return "{\"Error1\": \"Unable to find Session.\"}";
+
             }
             return response.toString();
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
-            return "{\"Error\": \"Unable to get item, please see server console for more info.\"}";
+            return "{\"Error2\": \"Unable to get item, please see server console for more info.\"}";
         }
     }
 }
