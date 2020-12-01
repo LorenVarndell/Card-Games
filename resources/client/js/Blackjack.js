@@ -34,14 +34,13 @@ function resizeCanvas(canvas) {
 
 
 function getBlackjackSessionCode(){
-
     const SessionID = document.getElementById("getBlackjackSessionID").value;
     let isNum = /^\d+$/.test(SessionID);
     // checks to see if they're any numbers in the String, using Boolean
     if (isNum === true && SessionID.indexOf(' ') == -1) {
         console.log("Fetching session code");
 
-        const url = "/Blackjack/get/";
+        var url = "/Blackjack/get/";
 
         fetch(url + SessionID, {
             method: "GET",
@@ -53,7 +52,6 @@ function getBlackjackSessionCode(){
             } else if (response.hasOwnProperty("Error1")) {
                 console.log(JSON.stringify(response));
             } else {
-
                 console.log(response);
                 document.getElementById("game").style.display = "block";
                 document.getElementById("inputs").style.display="none";
@@ -79,9 +77,18 @@ function createBlackjackSessionCode(){
         if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
         alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
     } else {
+        console.log(response);
+        document.getElementById("game").style.display = "block";
+        document.getElementById("inputs").style.display="none";
         //window.open("/client/home.html", "_self");   //if not open this page (for example!)
     }
     });
 
 }
 
+
+var ws = new WebSocket("ws://localhost:8081/client/blackjack.html");
+ws.onopen = function() {
+    console.log("Socket opened");
+    ws.send("Hello Server");
+};

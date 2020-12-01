@@ -13,3 +13,64 @@ cropped1 {
 #game {
    display: none;
 }
+
+.rules {
+   text-align: center;
+   font-size: 50px;
+   position: absolute;
+   top: 150px;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   color: black;
+   font-family: fantasy;
+}
+
+.rules1 {
+   font-size: 25px;
+   position: absolute;
+   top: 225px;
+   text-align: center;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 1200px;
+   color: black;
+   font-family: Arial;
+}
+
+.rulesimg {
+   border-radius: 5px;
+   height:800px;
+   width:1200px;
+   display:block;
+   margin: 50px;
+   margin-left:auto;
+   margin-right:auto;
+   border: 5px solid black;
+
+}
+
+.rulesback {
+   border-radius: 5px;
+   width: 300px;
+   border: 5px solid black;
+   position: relative;
+   transform: translate(-50%, -50%);
+   left: 1500px;
+
+}
+
+#btn {
+   display: block;
+   padding: 20px 50px;
+   background: url("../img/green.jpg");
+   border: 4px solid black;
+   font-family: Arial;
+   font-size: 25px;
+   font-weight: bold;
+   margin-left: auto;
+}
+
+.btncon {
+   width: 1200px;
+   margin: 0 auto;
+}
