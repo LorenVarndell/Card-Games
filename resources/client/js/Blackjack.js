@@ -1,35 +1,40 @@
 function pageLoad() {
     var canvas = document.getElementById("myCanvas");
-    window.addEventListener('resize', resizeCanvas(canvas), false);
-
     //document.getElementById("game").style.display ="none";
     document.getElementById("getBlackjackSession").addEventListener("click", getBlackjackSessionCode);
     document.getElementById("createBlackjackSession").addEventListener("click", createBlackjackSessionCode);
     console.log("Creating cookie/UserID");
-
-    if (sessionStorage.getItem("UserID") === null) {
-        var url = "/Users/add/";
-
-        fetch(url, {
-            method: "POST",
-        }).then(response => {
-            return response.json()
-        }).then(response => {
-            if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
-                alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
-            } else {
-                //console.log(localStorage.getItem("UserID"));
-                //Cookies.set("UserID",response.UserID);
-                sessionStorage.setItem("UserID", response.UserID);
-                console.log("Cookie set")
+    var UserID = localStorage.getItem("UserID");
+    var cookie = false;
+    setInterval(function(){
+        if (localStorage.getItem("UserID") === null) {
+            if (UserID === null) {
+                UserID = 1;
             }
-        });
-    }
-}
+            console.log(UserID);
+            var url = "/Users/delete/";
 
-function resizeCanvas(canvas) {
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
+            fetch(url + UserID, {
+                method: "POST",
+            }).then(response => {
+                return response.json()
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
+                    alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
+                } else {
+                    //console.log(localStorage.getItem("UserID"));
+                    //Cookies.set("UserID",response.UserID);
+                    localStorage.setItem("UserID", response.UserID);
+                    console.log("Cookie set")
+                    cookie = true;
+                    UserID = localStorage.getItem("UserID");
+                    console.log(UserID);
+                    cookie = false;
+                }
+            });
+        }
+    }, 100);
+
 }
 
 
@@ -39,10 +44,10 @@ function getBlackjackSessionCode(){
     // checks to see if they're any numbers in the String, using Boolean
     if (isNum === true && SessionID.indexOf(' ') == -1) {
         console.log("Fetching session code");
-
+        UserID = localStorage.getItem("UserID");
         var url = "/Blackjack/get/";
 
-        fetch(url + SessionID, {
+        fetch(url + SessionID +  "/" + UserID , {
             method: "GET",
         }).then(response => {
             return response.json();                 //return response to JSON
@@ -65,12 +70,13 @@ function getBlackjackSessionCode(){
 function createBlackjackSessionCode(){
     console.log("Invoked postBlackjackAdd()");
 
-    const formData = new FormData(document.getElementById("formCreateBlackjackSession"));
-    var url = "/Blackjack/add";
+    //const formData = new FormData(document.getElementById("formCreateBlackjackSession"));
+    UserID = localStorage.getItem("UserID");
+    console.log(UserID);
+    var url = "/Blackjack/add/";
 
-    fetch(url, {
+    fetch(url + UserID, {
         method: "POST",
-        body: formData,
     }).then(response => {
         return response.json()
     }).then(response => {
@@ -86,9 +92,19 @@ function createBlackjackSessionCode(){
 
 }
 
-
+/*
 var ws = new WebSocket("ws://localhost:8081/client/blackjack.html");
 ws.onopen = function() {
     console.log("Socket opened");
     ws.send("Hello Server");
 };
+*/
+
+var canvas = document.querySelector("canvas");
+canvas.width  = window.innerWidth*0.8;
+canvas.height = window.innerHeight*0.8;
+
+window.addEventListener("resize", function(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+})

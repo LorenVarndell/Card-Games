@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="js/Blackjack.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js" ></script>
     <link rel="stylesheet" href="css/Styles.css">
     <meta charset="UTF-8">
     <title>Blackjack</title>
 </head>
+<style>
+    canvas {
+        background:url('img/Red.jpg');
+        background-repeat:  no-repeat;
+        background-size: 100%;
+        border:1px solid;
+    }
+    body {
+        background-image: url('img/blue.jpg');
+        background-repeat:  no-repeat;
+        background-size: 100%;
+        margin: 0;
+
+
+    }
+</style>
 <body onload="pageLoad()">
     <div class="inputs" id="inputs">
         <h1> Enter Session Code for Blackjack</h1>
@@ -17,10 +32,9 @@
         <h1><button id="createBlackjackSession">Enter</button></h1>
     </div>
     <div id="game">
-        <canvas id="myCanvas" width="200" height="100" style="border:1px solid">
-
-        </canvas>
+        <canvas></canvas>
     </div>
+    <script src="js/Blackjack.js"></script>
 </body>
 </html>
 

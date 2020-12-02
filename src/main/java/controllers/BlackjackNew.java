@@ -1,14 +1,13 @@
 package controllers;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.simple.JSONObject;
 import server.Main;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 @Path("Blackjack/")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -19,18 +18,48 @@ import java.sql.PreparedStatement;
 public class BlackjackNew {
 
     @POST
-    @Path("add")
-    public String SessionAdd() {
+    @Path("add/{UserID}")
+    public String SessionAdd(@PathParam("UserID") Integer UserIDclient) {
         int random_int = (int)(Math.random() * (999999 - 99999 + 1) + 99999);
         System.out.println("Invoked Blackjack.SessionIDAdd()");
+        System.out.println(random_int);
         try {
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Blackjack (SessionID) VALUES (?)");
-            ps.setInt(1, random_int);
-            ps.execute();
+            PreparedStatement ps10 = Main.db.prepareStatement("SELECT Sessions.SessionID FROM Sessions JOIN Blackjack ON Owner = ? ");
+            ps10.setInt(1, UserIDclient);
+            ps10.execute();
+            ResultSet results = ps10.executeQuery();
+
+            if (results.next() == true) {
+                Integer Found = Integer.parseInt(results.getString(1));
+                System.out.println(Found);
+                PreparedStatement ps4 = Main.db.prepareStatement("DELETE FROM Sessions WHERE SessionID = ?");
+                ps4.setInt(1, Found);
+                ps4.execute();
+            }
+
+
             PreparedStatement ps1 = Main.db.prepareStatement("INSERT INTO Sessions (SessionID, Game) VALUES (?,?)");
             ps1.setInt(1, random_int);
             ps1.setString(2, "Blackjack");
             ps1.execute();
+            //System.out.println("test");
+
+
+            PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET SessionID = ?  WHERE UserID = ?");
+            ps2.setInt(1, random_int);
+            ps2.setInt(2, UserIDclient);
+            ps2.execute();
+            //System.out.println("test1");
+
+
+            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Blackjack (SessionID, Owner) VALUES (?,?)");
+            ps.setInt(1, random_int);
+            ps.setInt(2, UserIDclient);
+            ps.execute();
+            //System.out.println("test2");
+
+
+
             return "{\"OK\": \"Added SessionID.\"}";
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());

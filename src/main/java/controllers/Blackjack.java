@@ -16,8 +16,8 @@ import java.sql.ResultSet;
 public class Blackjack {
 
     @GET
-    @Path("get/{SessionID}")
-    public String getSessions(@PathParam("SessionID") Integer SessionID) {
+    @Path("get/{SessionID}/{UserID}")
+    public String getSessions(@PathParam("SessionID") Integer SessionID, @PathParam("UserID") Integer UserIDclient) {
         System.out.println("Invoked Session.getSessionID() with SessionID " + SessionID);
         try {
             PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Blackjack WHERE SessionID = ?");
@@ -28,6 +28,11 @@ public class Blackjack {
                 response.put("BlackjackSessionID", results.getString(1));
                 response.put("Cards",results.getString(2));
                 response.put("Start",results.getString(3));
+                PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET SessionID = ?  WHERE UserID = ?");
+                ps2.setInt(1, SessionID);
+                ps2.setInt(2, UserIDclient);
+                ps2.execute();
+
             } else {
                 return "{\"Error1\": \"Unable to find Session.\"}";
 
