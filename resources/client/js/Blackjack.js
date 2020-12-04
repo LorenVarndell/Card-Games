@@ -33,7 +33,7 @@ function pageLoad() {
                 }
             });
         }
-    }, 100);
+    }, 1000);
 
 }
 
@@ -55,6 +55,8 @@ function getBlackjackSessionCode(){
             if (response.hasOwnProperty("Error2")) { //checks if response from server has a key "Error"
                 alert(JSON.stringify(response));    // if it does, convert JSON object to string and alert
             } else if (response.hasOwnProperty("Error1")) {
+                console.log(JSON.stringify(response));
+            } else if (response.hasOwnProperty("Error")) {
                 console.log(JSON.stringify(response));
             } else {
                 console.log(response);
@@ -99,12 +101,22 @@ ws.onopen = function() {
     ws.send("Hello Server");
 };
 */
-
+/*
 var canvas = document.querySelector("canvas");
 canvas.width  = window.innerWidth*0.8;
 canvas.height = window.innerHeight*0.8;
 
 window.addEventListener("resize", function(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth*0.8;
+    canvas.height = window.innerHeight*0.8;
 })
+ */
+
+var canvas = document.querySelector("canvas");
+var ctx =  canvas.getContext("2d");
+var img = new Image();
+img.onload = function() {
+    ctx.drawImage(img, 10, 10, 100, 100);
+}
+img.src = 'img/blue.jpg';
+

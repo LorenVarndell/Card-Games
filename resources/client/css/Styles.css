@@ -39,13 +39,13 @@ cropped1 {
 
 .rulesimg {
    border-radius: 5px;
-   height:800px;
+   height:750px;
    width:1200px;
    display:block;
    margin: 50px;
    margin-left:auto;
    margin-right:auto;
-   border: 5px solid black;
+   border: 10px solid black;
 
 }
 
@@ -74,3 +74,4 @@ cropped1 {
    width: 1200px;
    margin: 0 auto;
 }
+

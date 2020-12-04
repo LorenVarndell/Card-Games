@@ -8,6 +8,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Path("Blackjack/")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -58,6 +61,15 @@ public class BlackjackNew {
             ps.execute();
             //System.out.println("test2");
 
+            //cards
+            List<String> allCards = Arrays.asList("S2", "D2", "H2", "C2", "S3", "D3", "H3", "C3", "S4",
+                    "D4", "H4", "C4", "S5", "D5", "H5", "C5", "S6", "D6", "H6", "C6", "S7", "D7", "H7",
+                    "C7", "S8", "D8", "H8", "C8", "S9", "D9", "H9", "C9", "S10", "D10", "H10", "C10",
+                    "SJ", "DJ", "HJ", "CJ", "SQ", "DQ", "HQ", "CQ", "SK", "DK", "HK", "CK", "SA",
+                    "DA", "HA", "CA");
+
+            System.out.println(allCards.toString());
+            System.out.println(allCards.get(9));
 
 
             return "{\"OK\": \"Added SessionID.\"}";
