@@ -45,7 +45,7 @@ public class Users {
             //System.out.println("test");
             JSONObject response = new JSONObject();
             response.put("UserID", random_int);
-
+            // ps will update the UserID in the Users table if the old UserID for the same game has been removed.
             PreparedStatement ps1 = Main.db.prepareStatement("SELECT UserID FROM Users WHERE UserID = ?");
             ps1.setInt(1, random_int);
             ResultSet results = ps1.executeQuery();

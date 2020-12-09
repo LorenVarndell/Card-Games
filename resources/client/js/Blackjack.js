@@ -7,7 +7,7 @@ function pageLoad() {
     var UserID = localStorage.getItem("UserID");
     var cookie = false;
     setInterval(function(){
-        if (localStorage.getItem("UserID") === null) {
+        if (localStorage.getItem("UserID") === null || localStorage.getItem("UserID") != UserID) {
             if (UserID === null) {
                 UserID = 1;
             }
@@ -27,7 +27,7 @@ function pageLoad() {
                     localStorage.setItem("UserID", response.UserID);
                     console.log("Cookie set")
                     cookie = true;
-                    UserID = localStorage.getItem("UserID");
+                    UserID = response.UserID;
                     console.log(UserID);
                     cookie = false;
                 }
@@ -116,7 +116,7 @@ var canvas = document.querySelector("canvas");
 var ctx =  canvas.getContext("2d");
 var img = new Image();
 img.onload = function() {
-    ctx.drawImage(img, 10, 10, 100, 100);
+    ctx.drawImage(img, 0, 0, 25, 36);
 }
-img.src = 'img/blue.jpg';
+img.src = 'img/2C.png';
 
