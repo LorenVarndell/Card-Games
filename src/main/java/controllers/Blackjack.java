@@ -39,10 +39,27 @@ public class Blackjack {
                 secondUserID = results2.getInt(1);
                 numberOfPeople--;
             }
+
             //System.out.println(secondUserID);
             //System.out.println(UserIDclient);
 
             if (numberOfPeople <= 7) {
+                PreparedStatement ps6 = Main.db.prepareStatement("SELECT SessionID FROM Blackjack WHERE Owner = ?");
+                ps6.setInt(1, UserIDclient);
+                ps6.execute();
+                ResultSet results4 = ps6.executeQuery();
+
+                if (results4.next() == true) {
+                    PreparedStatement ps7 = Main.db.prepareStatement("DELETE FROM Sessions WHERE SessionID = ?");
+                    ps7.setInt(1, results4.getInt(1));
+                    ps7.execute();
+
+                    PreparedStatement ps8 = Main.db.prepareStatement("DELETE FROM Blackjack WHERE SessionID = ?");
+                    ps8.setInt(1, results4.getInt(1));
+                    ps8.execute();
+                    //These three statements will delete any trace of a Users current Session if they own it.
+                }
+
                 PreparedStatement ps3 = Main.db.prepareStatement("SELECT * FROM Blackjack WHERE SessionID = ?");
                 ps3.setInt(1, SessionID);
                 ResultSet results3 = ps3.executeQuery();

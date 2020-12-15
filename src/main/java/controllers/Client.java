@@ -24,6 +24,13 @@ public class Client {
     }
 
     @GET
+    @Path("img/Cards/{path}")
+    @Produces({"image/jpeg,image/png"})
+    public byte[] getImageFileCards(@PathParam("path") String path) {
+        return getFile("client/img/Cards/" + path);
+    }
+
+    @GET
     @Path("js/{path}")
     @Produces({"text/javascript"})
     public byte[] getJavaScriptFile(@PathParam("path") String path) {

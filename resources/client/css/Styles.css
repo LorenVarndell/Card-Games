@@ -75,3 +75,18 @@ cropped1 {
    margin: 0 auto;
 }
 
+
+.start {
+   display:block;
+   font-size: 50px;
+   position: absolute;
+   top: 400px;
+   text-align: center;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 250px;
+   color: black;
+   font-family: fantasy;
+   user-select: none;
+}
+

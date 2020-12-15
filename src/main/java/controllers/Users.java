@@ -49,6 +49,8 @@ public class Users {
             PreparedStatement ps1 = Main.db.prepareStatement("SELECT UserID FROM Users WHERE UserID = ?");
             ps1.setInt(1, random_int);
             ResultSet results = ps1.executeQuery();
+
+
             if (results.next() == true) {
                 System.out.println("test");
                 return response.toString();
