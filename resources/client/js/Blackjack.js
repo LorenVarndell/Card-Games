@@ -1,8 +1,10 @@
 function pageLoad() {
     //document.getElementById("game").style.display ="none";
+    document.getElementById("hitBtn").style.display="none";
     document.getElementById("getBlackjackSession").addEventListener("click", getBlackjackSessionCode);
     document.getElementById("createBlackjackSession").addEventListener("click", createBlackjackSessionCode);
     document.getElementById("startBtn").addEventListener("click", initializeGame);
+    document.getElementById("hitBtn").addEventListener("click", hitBtn);
     console.log("Creating cookie/UserID");
     var UserID = localStorage.getItem("UserID");
     var cookie = false;
@@ -33,10 +35,9 @@ function pageLoad() {
                 }
             });
         }
-
+        console.log(playerInp);
         var url1 = "/BlackjackUpdate/add/";
-
-        fetch(url1 + UserID , {
+        fetch(url1 + UserID +  "/" + playerInp, {
             method: "POST",
         }).then(response => {
             return response.json();                 //return response to JSON
@@ -45,6 +46,17 @@ function pageLoad() {
                 console.log(JSON.stringify(response));
             } else {
                 console.log(response);
+                if (response.turn == true)  {
+                    document.getElementById("hitBtn").style.display = "block";
+                    document.getElementById("hitBtn").style.border = "5px solid black";
+                    console.log("initializing Game");
+                } else if (response.turn == false) {
+                    document.getElementById("messageBox").style.display = "none";
+                    document.getElementById("messageBox").style.border = "0px solid black";
+                    document.getElementById("hitBtn").style.display = "none";
+                    document.getElementById("hitBtn").style.border = "0px solid black";
+                }
+                playerInp = "1";
             }
         });
 
@@ -77,9 +89,9 @@ function getBlackjackSessionCode(){
                 console.log(response);
                 document.getElementById("inputs").style.display="none";
                 document.getElementById("game").style.display = "block";
-                document.getElementById("startBtn").style.display = "block";
-                document.getElementById("startBtn").style.border = "5px solid black";
-                document.getElementById("startBtn").innerHTML  = "Wait for Owner to start game...";
+                document.getElementById("messageBox").style.display = "block";
+                document.getElementById("messageBox").style.border = "5px solid black";
+                document.getElementById("messageBox").innerHTML  = "Wait for Owner to start game...";
                 owner = false;
                 return owner;
                 //this function will create an HTML table of the data (as we
@@ -136,6 +148,8 @@ function initializeGame() {
                 console.log(response);
                 document.getElementById("startBtn").style.display = "none";
                 document.getElementById("startBtn").style.border = "0px solid black";
+                document.getElementById("hitBtn").style.display = "block";
+                document.getElementById("hitBtn").style.border = "5px solid black";
                 console.log("initializing Game");
             }
         });
@@ -144,8 +158,13 @@ function initializeGame() {
     }
 }
 
+function hitBtn() {
+    playerInp = "hit";
+    console.log(playerInp);
+    return playerInp;
+}
 var owner = false;
-
+var playerInp = "1";
 /*
 var ws = new WebSocket("ws://localhost:8081/client/blackjack.html");
 ws.onopen = function() {

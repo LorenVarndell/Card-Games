@@ -43,6 +43,7 @@ public class Blackjack {
             //System.out.println(secondUserID);
             //System.out.println(UserIDclient);
 
+
             if (numberOfPeople <= 7) {
                 PreparedStatement ps6 = Main.db.prepareStatement("SELECT SessionID FROM Blackjack WHERE Owner = ?");
                 ps6.setInt(1, UserIDclient);
@@ -57,8 +58,8 @@ public class Blackjack {
                     PreparedStatement ps8 = Main.db.prepareStatement("DELETE FROM Blackjack WHERE SessionID = ?");
                     ps8.setInt(1, results4.getInt(1));
                     ps8.execute();
-                    //These three statements will delete any trace of a Users current Session if they own it.
                 }
+                //These three statements will delete any trace of a Users current Session if they own it.
 
                 PreparedStatement ps3 = Main.db.prepareStatement("SELECT * FROM Blackjack WHERE SessionID = ?");
                 ps3.setInt(1, SessionID);
@@ -68,9 +69,11 @@ public class Blackjack {
                     response.put("BlackjackSessionID", results3.getString(1));
                     response.put("Cards", results3.getString(2));
                     response.put("Start", results3.getString(3));
-                    PreparedStatement ps4 = Main.db.prepareStatement("UPDATE Users SET SessionID = ?  WHERE UserID = ?");
+                    PreparedStatement ps4 = Main.db.prepareStatement("UPDATE Users SET SessionID = ?, Cards = ?, Score = ?   WHERE UserID = ?");
                     ps4.setInt(1, SessionID);
-                    ps4.setInt(2, UserIDclient);
+                    ps4.setString(2,""); //resets cards
+                    ps4.setInt(3, 0); //reset score
+                    ps4.setInt(4, UserIDclient);
                     ps4.execute();
 
 

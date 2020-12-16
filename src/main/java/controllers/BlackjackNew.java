@@ -38,6 +38,7 @@ public class BlackjackNew {
             TotalCards = TotalCards + allCards.get(i);
         }
         System.out.println(TotalCards);
+
         try {
             PreparedStatement ps10 = Main.db.prepareStatement("SELECT Sessions.SessionID FROM Sessions JOIN Blackjack ON Owner = ? ");
             ps10.setInt(1, UserIDclient);
@@ -60,9 +61,11 @@ public class BlackjackNew {
             //System.out.println("test");
 
 
-            PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET SessionID = ?  WHERE UserID = ?");
+            PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET SessionID = ?, Cards = ?, Score = ?   WHERE UserID = ?");
             ps2.setInt(1, random_int);
-            ps2.setInt(2, UserIDclient);
+            ps2.setString(2,""); //resets cards
+            ps2.setInt(3, 0); //reset score
+            ps2.setInt(4, UserIDclient);
             ps2.execute();
             //System.out.println("test1");
 

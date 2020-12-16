@@ -37,6 +37,11 @@ public class BlackjackStart {
                 ps1.setInt(2, UserIDclient);
                 ps1.execute();
 
+                PreparedStatement ps5 = Main.db.prepareStatement("UPDATE Blackjack SET Round = ? WHERE Owner = ?");
+                ps5.setInt(1, 1);
+                ps5.setInt(2, UserIDclient);
+                ps5.execute();
+
                 PreparedStatement ps2 = Main.db.prepareStatement("SELECT UserID FROM Users WHERE SessionID IN (SELECT SessionID FROM Blackjack WHERE Owner = ?) AND UserID != ?");
                 ps2.setInt(1, UserIDclient);
                 ps2.setInt(2, UserIDclient);
