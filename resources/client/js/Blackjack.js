@@ -1,10 +1,20 @@
 function pageLoad() {
     //document.getElementById("game").style.display ="none";
     document.getElementById("hitBtn").style.display="none";
+    document.getElementById("standBtn").style.display="none";
+    document.getElementById("score").style.display="none";
+    document.getElementById("score").style.top = "650px";
+    document.getElementById("score").style.width = "600px";
+    document.getElementById("hitBtn").style.top = "175px";
+    document.getElementById("standBtn").style.top = "250px";
+    document.getElementById("nextRoundBtn").style.display="none";
+    document.getElementById("nextRoundBtn").style.top = "200px";
     document.getElementById("getBlackjackSession").addEventListener("click", getBlackjackSessionCode);
     document.getElementById("createBlackjackSession").addEventListener("click", createBlackjackSessionCode);
     document.getElementById("startBtn").addEventListener("click", initializeGame);
     document.getElementById("hitBtn").addEventListener("click", hitBtn);
+    document.getElementById("nextRoundBtn").addEventListener("click", nextRoundBtn);
+    document.getElementById("standBtn").addEventListener("click", standBtn);
     console.log("Creating cookie/UserID");
     var UserID = localStorage.getItem("UserID");
     var cookie = false;
@@ -46,16 +56,115 @@ function pageLoad() {
                 console.log(JSON.stringify(response));
             } else {
                 console.log(response);
-                if (response.turn == true)  {
-                    document.getElementById("hitBtn").style.display = "block";
-                    document.getElementById("hitBtn").style.border = "5px solid black";
-                    console.log("initializing Game");
-                } else if (response.turn == false) {
-                    document.getElementById("messageBox").style.display = "none";
-                    document.getElementById("messageBox").style.border = "0px solid black";
-                    document.getElementById("hitBtn").style.display = "none";
-                    document.getElementById("hitBtn").style.border = "0px solid black";
+
+                if (response.cards !== undefined) {
+                    if (response.round != oldRound) {
+                        reset = true;
+                    }
+                    if ((response.cards).length != 0 && (response.cards).length != oldLength) {
+                        for (var i = 2 + oldLength; i < ((response.cards).length) + 2; i = i + 2) {
+                            card = (response.cards).substring(i - 2, i);
+                            if (card.charAt(1) === "T" || card.charAt(1) === "J" || card.charAt(1) === "Q" || card.charAt(1) === "K") {
+                                clientScore = clientScore + 10;
+                            } else if (card.charAt(1) === "A") {
+                                clientScore = clientScore + 11;
+                                Ace++;
+                            } else {
+                                clientScore = clientScore + parseInt(card.charAt(1));
+                            }
+                        }
+
+                        if (Ace > lowAce) {
+                            if (clientScore > 21) {
+                                for (var i = 0; i <= Ace; i++) {
+                                    console.log("test");
+                                    if ((clientScore - (i * 10)) <= 21) {
+                                        clientScore = clientScore - (i * 10);
+                                        lowAce++;
+                                        i = 10;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (clientScore > 21 || response.score < 0 || newRound == true) {
+                        newRound = true;
+                    }
+
+                    if (response.turn == true) {
+                        if (newRound == true) {
+                            document.getElementById("hitBtn").style.display = "none";
+                            document.getElementById("hitBtn").style.border = "0px solid black";
+                            document.getElementById("standBtn").style.display = "none";
+                            document.getElementById("standBtn").style.border = "0px solid black";
+                        } else {
+                            document.getElementById("score").style.display = "block";
+                            document.getElementById("hitBtn").style.display = "block";
+                            document.getElementById("hitBtn").style.border = "5px solid black";
+                            document.getElementById("standBtn").style.display = "block";
+                            document.getElementById("standBtn").style.border = "5px solid black";
+                        }
+                        if ((response.cards).length != 0) {
+                            if (((response.cards).length) / 2 > numOfIMG) {
+                                numOfIMG++;
+                                let img = document.createElement("img");
+                                for (let i = 2; i < ((response.cards).length) + 2; i = i + 2) {
+                                    img.src = './img/Cards/' + (response.cards).substring(i - 2, i) + '.png';
+                                    img.classList.add("cards");
+                                    document.getElementById("cardIMG").appendChild(img);
+                                    console.log((response.cards).substring(i - 2, i))
+                                }
+                            }
+                        }
+
+
+                    } else if (response.turn == false) {
+                        if (response.standbyCurrent == true && newRound == true) {
+                            document.getElementById("nextRoundBtn").style.display = "block";
+                            document.getElementById("nextRoundBtn").style.border = "5px solid black";
+                        } else {
+                            document.getElementById("nextRoundBtn").style.display = "none";
+                            document.getElementById("nextRoundBtn").style.border = "0px solid black";
+                        }
+                        if ((response.cards).length != 0) {
+                            if (((response.cards).length) / 2 > numOfIMG) {
+                                numOfIMG++;
+                                let img = document.createElement("img");
+                                for (let i = 2; i < ((response.cards).length) + 2; i = i + 2) {
+                                    img.src = './img/Cards/' + (response.cards).substring(i - 2, i) + '.png';
+                                    img.classList.add("cards");
+                                    document.getElementById("cardIMG").appendChild(img);
+                                    console.log((response.cards).substring(i - 2, i))
+                                }
+                            }
+                        }
+
+                        document.getElementById("messageBox").style.display = "none";
+                        document.getElementById("messageBox").style.border = "0px solid black";
+                        document.getElementById("hitBtn").style.display = "none";
+                        document.getElementById("hitBtn").style.border = "0px solid black";
+                        document.getElementById("score").style.display = "block";
+                    }
+
+                    document.getElementById("score").innerHTML = "Current score: " + clientScore;
+                    console.log(reset);
+                    if (reset == true) {
+                        oldLength = 0;
+                        clientScore = 0;
+                        reset = false;
+                        newRound = false;
+                        numOfIMG = 0;
+                        Ace = 0;
+                        lowAce = 0;
+                        document.getElementById("cardIMG").innerHTML = "";
+                        document.getElementById("score").innerHTML = "";
+                    }
+                    if ((response.cards).length != 0) {
+                        oldLength = (response.cards).length;
+                    }
+                    oldRound = response.round;
                 }
+
                 playerInp = "1";
             }
         });
@@ -148,8 +257,6 @@ function initializeGame() {
                 console.log(response);
                 document.getElementById("startBtn").style.display = "none";
                 document.getElementById("startBtn").style.border = "0px solid black";
-                document.getElementById("hitBtn").style.display = "block";
-                document.getElementById("hitBtn").style.border = "5px solid black";
                 console.log("initializing Game");
             }
         });
@@ -163,8 +270,28 @@ function hitBtn() {
     console.log(playerInp);
     return playerInp;
 }
+function nextRoundBtn() {
+    playerInp = "next";
+    console.log(playerInp);
+    return playerInp;
+}
+function standBtn() {
+    playerInp = "stand";
+    console.log(playerInp);
+    return playerInp;
+}
 var owner = false;
 var playerInp = "1";
+var numOfIMG = 0;
+var newRound = false;
+var score = 0
+var reset = false;
+var Ace = 0; //number of aces
+var clientScore = 0;
+var card = "";
+var oldLength = 0;
+var lowAce = 0;
+var oldRound = 1;
 /*
 var ws = new WebSocket("ws://localhost:8081/client/blackjack.html");
 ws.onopen = function() {
@@ -195,7 +322,7 @@ window.addEventListener("mousedown",
         ctx.font=  "150px Arial";
         ctx.fillText("Start:",1400, 910);
 
-        //img.src = './img/Cards/2D.png';
+        //img.src = './img/Cards/D2.png';
         //ctx.drawImage(img, 0, 0);
     }
     //console.log(event);
@@ -208,5 +335,5 @@ img.onload = function() {
 }
 */
 //console.log(Math.round(window.devicePixelRatio*100));
-//img.src = './img/Cards/2D.png';
+//img.src = './img/Cards/D2.png';
 

@@ -46,7 +46,6 @@ cropped1 {
    margin-left:auto;
    margin-right:auto;
    border: 10px solid black;
-
 }
 
 .rulesback {
@@ -90,16 +89,15 @@ cropped1 {
    user-select: none;
 }
 
-.msge {
-   display:block;
-   font-size: 50px;
-   position: absolute;
+.cards {
+   padding: 5px;
+   display: inline;
+   width: 125px;
+   height: 182px;
+   z-index: 1;
+   position: relative;
    top: 400px;
-   text-align: center;
-   left: 50%;
+   left: 30%;
    transform: translate(-50%, -50%);
-   width: 250px;
-   color: black;
-   font-family: fantasy;
    user-select: none;
 }
