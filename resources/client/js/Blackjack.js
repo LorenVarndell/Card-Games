@@ -2,19 +2,26 @@ function pageLoad() {
     //document.getElementById("game").style.display ="none";
     document.getElementById("hitBtn").style.display="none";
     document.getElementById("standBtn").style.display="none";
+    document.getElementById("hitBtn").style.top = "175px";
+    document.getElementById("standBtn").style.top = "250px";
     document.getElementById("score").style.display="none";
     document.getElementById("score").style.top = "650px";
     document.getElementById("score").style.width = "600px";
-    document.getElementById("hitBtn").style.top = "175px";
-    document.getElementById("standBtn").style.top = "250px";
+    document.getElementById("result").style.display = "none";
+    document.getElementById("result").style.border = "0px solid black";
+    document.getElementById("result").style.fontSize = "75px";
+    document.getElementById("result").style.width = "800px";
+    document.getElementById("result").style.top = "550px";
+    document.getElementById("player").style.display = "none";
+    document.getElementById("player").style.top = "200px";
     document.getElementById("nextRoundBtn").style.display="none";
     document.getElementById("nextRoundBtn").style.top = "200px";
     document.getElementById("getBlackjackSession").addEventListener("click", getBlackjackSessionCode);
     document.getElementById("createBlackjackSession").addEventListener("click", createBlackjackSessionCode);
     document.getElementById("startBtn").addEventListener("click", initializeGame);
     document.getElementById("hitBtn").addEventListener("click", hitBtn);
-    document.getElementById("nextRoundBtn").addEventListener("click", nextRoundBtn);
     document.getElementById("standBtn").addEventListener("click", standBtn);
+    document.getElementById("nextRoundBtn").addEventListener("click", nextRoundBtn);
     console.log("Creating cookie/UserID");
     var UserID = localStorage.getItem("UserID");
     var cookie = false;
@@ -54,13 +61,44 @@ function pageLoad() {
         }).then(response => {
             if (response.hasOwnProperty("Error")) {
                 console.log(JSON.stringify(response));
+            } else if (response.hasOwnProperty("Error2")){
+                console.log(JSON.stringify(response));
+            } else if (response.hasOwnProperty("Error3")){
+                console.log(JSON.stringify(response));
             } else {
                 console.log(response);
+                document.getElementById("inputs").style.display="none";
+                document.getElementById("game").style.display = "block";
+                if (response.finalScore !== undefined) {
+                    document.getElementById("cardIMG").innerHTML = "";
+                    document.getElementById("result").style.display = "none";
+                    document.getElementById("sessionCode").style.display = "none";
+                    document.getElementById("hitBtn").style.display="none";
+                    document.getElementById("standBtn").style.display="none";
+                    document.getElementById("score").style.display="block";
+                    document.getElementById("nextRoundBtn").style.display="none";
+                    document.getElementById("score").style.top = "200px";
+                    document.getElementById("score").style.fontSize = "100px";
+                    document.getElementById("score").innerHTML = "Winners scores: " + response.finalScore;
+                    document.getElementById("player").style.display = "block";
+                    document.getElementById("player").style.top = "500px";
+                    document.getElementById("player").style.fontSize = "35px";
+                    document.getElementById("player").style.border = "0px solid black";
+                    document.getElementById("player").innerHTML = "Winners: ";
+                    for (var i = 0; i < (response.winners).length; i++) {
+                        if (i == (response.winners).length-1) {
+                            document.getElementById("player").innerHTML += "Player" + (response.winners).charAt(i)
+                        } else {
+                            document.getElementById("player").innerHTML += "Player" + (response.winners).charAt(i) + ", ";
+                        }
+                    }
 
+                }
                 if (response.cards !== undefined) {
                     if (response.round != oldRound) {
                         reset = true;
                     }
+
                     if ((response.cards).length != 0 && (response.cards).length != oldLength) {
                         for (var i = 2 + oldLength; i < ((response.cards).length) + 2; i = i + 2) {
                             card = (response.cards).substring(i - 2, i);
@@ -87,11 +125,23 @@ function pageLoad() {
                             }
                         }
                     }
-                    if (clientScore > 21 || response.score < 0 || newRound == true) {
+                    if (response.score < 0 || newRound == true) {
                         newRound = true;
+                    }
+                    if (newRound == true) {
+                        if (clientScore > 21) {
+                            document.getElementById("result").innerHTML = "Score over 21, lost";
+                        } else if (clientScore == 21) {
+                            document.getElementById("result").innerHTML = "Blackjack!";
+                        } else {
+                            document.getElementById("result").innerHTML = "Player has stood";
+                        }
+                        document.getElementById("result").style.display = "block";
                     }
 
                     if (response.turn == true) {
+                        document.getElementById("player").style.display = "none";
+                        document.getElementById("player").style.border = "0px solid black";
                         if (newRound == true) {
                             document.getElementById("hitBtn").style.display = "none";
                             document.getElementById("hitBtn").style.border = "0px solid black";
@@ -104,39 +154,23 @@ function pageLoad() {
                             document.getElementById("standBtn").style.display = "block";
                             document.getElementById("standBtn").style.border = "5px solid black";
                         }
-                        if ((response.cards).length != 0) {
-                            if (((response.cards).length) / 2 > numOfIMG) {
-                                numOfIMG++;
-                                let img = document.createElement("img");
-                                for (let i = 2; i < ((response.cards).length) + 2; i = i + 2) {
-                                    img.src = './img/Cards/' + (response.cards).substring(i - 2, i) + '.png';
-                                    img.classList.add("cards");
-                                    document.getElementById("cardIMG").appendChild(img);
-                                    console.log((response.cards).substring(i - 2, i))
-                                }
-                            }
-                        }
 
 
                     } else if (response.turn == false) {
-                        if (response.standbyCurrent == true && newRound == true) {
+                        if ((response.standbyCurrent == true && newRound == true) || response.standbyCurrentEnd == true) {
+                            if (response.standbyCurrentEnd == true) {
+                                document.getElementById("nextRoundBtn").innerHTML = "View final standings";
+                            }
+                            document.getElementById("player").style.display = "none";
+                            document.getElementById("player").style.border = "0px solid black";
                             document.getElementById("nextRoundBtn").style.display = "block";
                             document.getElementById("nextRoundBtn").style.border = "5px solid black";
                         } else {
                             document.getElementById("nextRoundBtn").style.display = "none";
                             document.getElementById("nextRoundBtn").style.border = "0px solid black";
-                        }
-                        if ((response.cards).length != 0) {
-                            if (((response.cards).length) / 2 > numOfIMG) {
-                                numOfIMG++;
-                                let img = document.createElement("img");
-                                for (let i = 2; i < ((response.cards).length) + 2; i = i + 2) {
-                                    img.src = './img/Cards/' + (response.cards).substring(i - 2, i) + '.png';
-                                    img.classList.add("cards");
-                                    document.getElementById("cardIMG").appendChild(img);
-                                    console.log((response.cards).substring(i - 2, i))
-                                }
-                            }
+                            document.getElementById("player").innerHTML = "Player: " + response.round;
+                            document.getElementById("player").style.display = "block";
+                            document.getElementById("player").style.border = "5px solid black";
                         }
 
                         document.getElementById("messageBox").style.display = "none";
@@ -144,6 +178,19 @@ function pageLoad() {
                         document.getElementById("hitBtn").style.display = "none";
                         document.getElementById("hitBtn").style.border = "0px solid black";
                         document.getElementById("score").style.display = "block";
+                    }
+
+                    if ((response.cards).length != 0) {
+                        if (((response.cards).length) / 2 > numOfIMG) {
+                            numOfIMG++;
+                            let img = document.createElement("img");
+                            for (let i = 2; i < ((response.cards).length) + 2; i = i + 2) {
+                                img.src = './img/Cards/' + (response.cards).substring(i - 2, i) + '.png';
+                                img.classList.add("cards");
+                                document.getElementById("cardIMG").appendChild(img);
+                                console.log((response.cards).substring(i - 2, i))
+                            }
+                        }
                     }
 
                     document.getElementById("score").innerHTML = "Current score: " + clientScore;
@@ -158,6 +205,7 @@ function pageLoad() {
                         lowAce = 0;
                         document.getElementById("cardIMG").innerHTML = "";
                         document.getElementById("score").innerHTML = "";
+                        document.getElementById("result").style.display = "none";
                     }
                     if ((response.cards).length != 0) {
                         oldLength = (response.cards).length;
@@ -169,7 +217,7 @@ function pageLoad() {
             }
         });
 
-    }, 1000);
+    }, 1000)
 
 }
 
@@ -201,6 +249,7 @@ function getBlackjackSessionCode(){
                 document.getElementById("messageBox").style.display = "block";
                 document.getElementById("messageBox").style.border = "5px solid black";
                 document.getElementById("messageBox").innerHTML  = "Wait for Owner to start game...";
+                document.getElementById("sessionCode").innerHTML  = "Session Code: " + response.BlackjackSessionID;
                 owner = false;
                 return owner;
                 //this function will create an HTML table of the data (as we
@@ -226,12 +275,13 @@ function createBlackjackSessionCode(){
         if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error"
         alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
     } else {
-        console.log(response);
+        console.log(response.BlackjackSessionID);
         document.getElementById("inputs").style.display="none";
         document.getElementById("game").style.display = "block";
         document.getElementById("startBtn").style.display = "block";
         document.getElementById("startBtn").style.border = "5px solid black";
         document.getElementById("startBtn").innerHTML  = "Press to Start";
+        document.getElementById("sessionCode").innerHTML  = "Session Code: " + response.BlackjackSessionID;
         owner = true;
         return owner;
         //window.open("/client/home.html", "_self");   //if not open this page (for example!)
@@ -270,13 +320,13 @@ function hitBtn() {
     console.log(playerInp);
     return playerInp;
 }
-function nextRoundBtn() {
-    playerInp = "next";
+function standBtn() {
+    playerInp = "stand";
     console.log(playerInp);
     return playerInp;
 }
-function standBtn() {
-    playerInp = "stand";
+function nextRoundBtn() {
+    playerInp = "next";
     console.log(playerInp);
     return playerInp;
 }

@@ -40,41 +40,42 @@ public class BlackjackNew {
         System.out.println(TotalCards);
 
         try {
-            PreparedStatement ps10 = Main.db.prepareStatement("SELECT Sessions.SessionID FROM Sessions JOIN Blackjack ON Owner = ? ");
-            ps10.setInt(1, UserIDclient);
-            ps10.execute();
-            ResultSet results = ps10.executeQuery();
+            //PreparedStatement sessionIDQuery = Main.db.prepareStatement("SELECT Sessions.SessionID FROM Sessions JOIN Blackjack ON Owner = ? ");
+            PreparedStatement sessionIDQuery = Main.db.prepareStatement("SELECT SessionID FROM Sessions WHERE SessionID IN (SELECT SessionID FROM Blackjack WHERE Owner = ?)");
+            sessionIDQuery.setInt(1, UserIDclient);
+            sessionIDQuery.execute();
+            ResultSet sessionIDResults = sessionIDQuery.executeQuery();
 
-            if (results.next() == true) {
-                Integer Found = Integer.parseInt(results.getString(1));
+            if (sessionIDResults.next() == true) {
+                Integer Found = Integer.parseInt(sessionIDResults.getString(1));
                 System.out.println(Found);
-                PreparedStatement ps4 = Main.db.prepareStatement("DELETE FROM Sessions WHERE SessionID = ?");
-                ps4.setInt(1, Found);
-                ps4.execute();
+                PreparedStatement deleteSessions = Main.db.prepareStatement("DELETE FROM Sessions WHERE SessionID = ?");
+                deleteSessions.setInt(1, Found);
+                deleteSessions.execute();
             }
 
 
-            PreparedStatement ps1 = Main.db.prepareStatement("INSERT INTO Sessions (SessionID, Game) VALUES (?,?)");
-            ps1.setInt(1, random_int);
-            ps1.setString(2, "Blackjack");
-            ps1.execute();
+            PreparedStatement insertSessions = Main.db.prepareStatement("INSERT INTO Sessions (SessionID, Game) VALUES (?,?)");
+            insertSessions.setInt(1, random_int);
+            insertSessions.setString(2, "Blackjack");
+            insertSessions.execute();
             //System.out.println("test");
 
 
-            PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET SessionID = ?, Cards = ?, Score = ?   WHERE UserID = ?");
-            ps2.setInt(1, random_int);
-            ps2.setString(2,""); //resets cards
-            ps2.setInt(3, 0); //reset score
-            ps2.setInt(4, UserIDclient);
-            ps2.execute();
+            PreparedStatement updateUsers = Main.db.prepareStatement("UPDATE Users SET SessionID = ?, Cards = ?, Score = ?   WHERE UserID = ?");
+            updateUsers.setInt(1, random_int);
+            updateUsers.setString(2,""); //resets cards
+            updateUsers.setInt(3, 0); //reset score
+            updateUsers.setInt(4, UserIDclient);
+            updateUsers.execute();
             //System.out.println("test1");
 
 
-            PreparedStatement ps = Main.db.prepareStatement("INSERT INTO Blackjack (SessionID, Owner, Cards) VALUES (?,?,?)");
-            ps.setInt(1, random_int);
-            ps.setInt(2, UserIDclient);
-            ps.setString(3, TotalCards);
-            ps.execute();
+            PreparedStatement insertBlackjack = Main.db.prepareStatement("INSERT INTO Blackjack (SessionID, Owner, Cards) VALUES (?,?,?)");
+            insertBlackjack.setInt(1, random_int);
+            insertBlackjack.setInt(2, UserIDclient);
+            insertBlackjack.setString(3, TotalCards);
+            insertBlackjack.execute();
             //System.out.println("test2");
 
             //System.out.println(allCards.toString());
@@ -84,8 +85,9 @@ public class BlackjackNew {
             //ps6.setString(1, "test");
             //ps6.setInt(2, random_int);
             //ps6.execute();
-
-            return "{\"OK\": \"Added SessionID.\"}";
+            JSONObject response = new JSONObject();
+            response.put("BlackjackSessionID", random_int);
+            return response.toString();
         } catch (Exception exception) {
             System.out.println("Database error: " + exception.getMessage());
             return "{\"Error\": \"Unable to create new item, please see server console for more info.\"}";

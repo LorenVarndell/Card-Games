@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,14 +7,64 @@
     <meta charset="UTF-8">
     <title>Bridge</title>
 </head>
+<style>
+    canvas {
+        background:url('img/green.jpg');
+        background-repeat:  no-repeat;
+        background-size: cover;
+        border:10px solid black;
+        border-radius: 5px;
+        display: block;
+        width: 1100px;
+        height: 710px;
+        position: absolute;
+        margin: 50px;
+        margin-left:auto;
+        margin-right:auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    body {
+        background-image: url('img/blue.jpg');
+        background-repeat:  no-repeat;
+        background-size: 100%;
+        margin: 0;
+
+
+    }
+</style>
+
 <body onload="pageLoad()">
-<h1> Enter Session Code for Bridge</h1>
-<h1><input type="text" id="getBridgeSessionID"></h1>
-<h1><button id="getBridgeSession">Enter</button></h1>
-<h1> Create Bridge Session</h1>
-<form id="formCreateBridgeSession">
-</form>
-<h1><button id="createBridgeSession">Enter</button></h1>
+    <div class="inputs" id="inputs">
+        <h1> Enter Session Code for Bridge</h1>
+        <h1><input type="text" id="getBridgeSessionID"></h1>
+        <h1><button id="getBridgeSession">Enter</button></h1>
+        <h1> Create Bridge Session</h1>
+        <form id="formCreateBridgeSession"></form>
+        <h1><button id="createBridgeSession">Enter</button></h1>
+    </div>
+    <div id="game">
+        <canvas width="3300px" height="2130px"></canvas>
+    </div>
+    <div id="sessionCode" class="sessionID"></div>
+    <div id="startBtn" class="start"></div>
+    <div id="messageBox" class="start"></div>
+    <div id="hitBtn" class="start">Hit</div>
+    <div id="player" class="start"></div>
+    <div id="nextRoundBtn" class="start">Start your round</div>
+    <div id="standBtn" class="start">Stand</div>
+    <div id="result" class="start">Stand</div>
+    <div id="score" class="start"></div>
+    <div id="cardIMG2"></div>
+    <div id="cardIMG"></div>
+    <div id="cardIMG3" class="sideCards1"></div>
+    <div id="cardIMG4" class ="sideCards2"></div>
+
+
+<script src="js/Bridge.js"></script>
 </body>
 </html>
+
 

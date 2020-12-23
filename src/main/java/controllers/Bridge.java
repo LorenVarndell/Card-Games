@@ -9,24 +9,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 
-@Path("Blackjack/")
+@Path("Bridge/")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.APPLICATION_JSON)
 
-public class Blackjack {
+public class Bridge {
 
     @GET
     @Path("get/{SessionID}/{UserID}")
     public String getSessions(@PathParam("SessionID") Integer SessionID, @PathParam("UserID") Integer UserIDclient) {
         System.out.println("Invoked Session.getSessionID() with SessionID " + SessionID);
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT NoP FROM Blackjack WHERE SessionID = ?");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT NoP FROM Bridge WHERE SessionID = ?");
             ps.setInt(1, SessionID);
             ps.execute();
             ResultSet results = ps.executeQuery();
             Integer numberOfPeople = 0;
             if (results.next() == true) {
-               numberOfPeople = (results.getInt(1)) + 1;
+               numberOfPeople = (results.getInt(1));
             }
 
             PreparedStatement ps2 = Main.db.prepareStatement("SELECT UserID FROM Users WHERE UserID = ? AND SessionID = ?");
@@ -44,8 +44,8 @@ public class Blackjack {
             //System.out.println(UserIDclient);
 
 
-            if (numberOfPeople <= 7) {
-                PreparedStatement ps6 = Main.db.prepareStatement("SELECT SessionID FROM Blackjack WHERE Owner = ?");
+            if (numberOfPeople < 4) {
+                PreparedStatement ps6 = Main.db.prepareStatement("SELECT SessionID FROM Bridge WHERE Owner = ?");
                 ps6.setInt(1, UserIDclient);
                 ps6.execute();
                 ResultSet results4 = ps6.executeQuery();
@@ -55,18 +55,18 @@ public class Blackjack {
                     ps7.setInt(1, results4.getInt(1));
                     ps7.execute();
 
-                    PreparedStatement ps8 = Main.db.prepareStatement("DELETE FROM Blackjack WHERE SessionID = ?");
+                    PreparedStatement ps8 = Main.db.prepareStatement("DELETE FROM Bridge WHERE SessionID = ?");
                     ps8.setInt(1, results4.getInt(1));
                     ps8.execute();
                 }
                 //These three statements will delete any trace of a Users current Session if they own it.
 
-                PreparedStatement ps3 = Main.db.prepareStatement("SELECT * FROM Blackjack WHERE SessionID = ?");
+                PreparedStatement ps3 = Main.db.prepareStatement("SELECT * FROM Bridge WHERE SessionID = ?");
                 ps3.setInt(1, SessionID);
                 ResultSet results3 = ps3.executeQuery();
                 JSONObject response = new JSONObject();
                 if (results3.next() == true) {
-                    response.put("BlackjackSessionID", results3.getString(1));
+                    response.put("BridgeSessionID", results3.getString(1));
                     PreparedStatement ps4 = Main.db.prepareStatement("UPDATE Users SET SessionID = ?, Cards = ?, Score = ?   WHERE UserID = ?");
                     ps4.setInt(1, SessionID);
                     ps4.setString(2,""); //resets cards
@@ -75,8 +75,8 @@ public class Blackjack {
                     ps4.execute();
 
 
-                    PreparedStatement ps5 = Main.db.prepareStatement("UPDATE Blackjack SET NoP = ? WHERE SessionID = ?");
-                    ps5.setInt(1, numberOfPeople);
+                    PreparedStatement ps5 = Main.db.prepareStatement("UPDATE Bridge SET NoP = ? WHERE SessionID = ?");
+                    ps5.setInt(1, numberOfPeople+1);
                     ps5.setInt(2, SessionID);
                     ps5.execute();
 

@@ -1,6 +1,5 @@
 package controllers;
 
-import org.json.simple.JSONObject;
 import server.Main;
 
 import javax.ws.rs.*;
@@ -23,57 +22,57 @@ public class BlackjackStart {
     public String getUpdate(@PathParam("UserID") Integer UserIDclient) {
         System.out.println("Invoked BlackjackStart.Start()");
         try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT NoP FROM Blackjack WHERE Owner = ?");
-            ps.setInt(1, UserIDclient);
-            ps.execute();
-            ResultSet results = ps.executeQuery();
+            PreparedStatement NoPQuery = Main.db.prepareStatement("SELECT NoP FROM Blackjack WHERE Owner = ?");
+            NoPQuery.setInt(1, UserIDclient);
+            NoPQuery.execute();
+            ResultSet NoPResults = NoPQuery.executeQuery();
             Integer numberOfPeople = 0;
 
-            numberOfPeople = results.getInt(1);
+            numberOfPeople = NoPResults.getInt(1);
 
             if (numberOfPeople > 1) {
-                PreparedStatement ps1 = Main.db.prepareStatement("UPDATE Blackjack SET Start = ? WHERE Owner = ?");
-                ps1.setBoolean(1, true);
-                ps1.setInt(2, UserIDclient);
-                ps1.execute();
+                PreparedStatement updateStart = Main.db.prepareStatement("UPDATE Blackjack SET Start = ? WHERE Owner = ?");
+                updateStart.setBoolean(1, true);
+                updateStart.setInt(2, UserIDclient);
+                updateStart.execute();
 
-                PreparedStatement ps5 = Main.db.prepareStatement("UPDATE Blackjack SET Round = ? WHERE Owner = ?");
-                ps5.setInt(1, 1);
-                ps5.setInt(2, UserIDclient);
-                ps5.execute();
+                PreparedStatement updateRound = Main.db.prepareStatement("UPDATE Blackjack SET Round = ? WHERE Owner = ?");
+                updateRound.setInt(1, 1);
+                updateRound.setInt(2, UserIDclient);
+                updateRound.execute();
 
-                PreparedStatement ps2 = Main.db.prepareStatement("SELECT UserID FROM Users WHERE SessionID IN (SELECT SessionID FROM Blackjack WHERE Owner = ?) AND UserID != ?");
-                ps2.setInt(1, UserIDclient);
-                ps2.setInt(2, UserIDclient);
-                ps2.execute();
+                PreparedStatement userIDQuery = Main.db.prepareStatement("SELECT UserID FROM Users WHERE SessionID IN (SELECT SessionID FROM Blackjack WHERE Owner = ?) AND UserID != ?");
+                userIDQuery.setInt(1, UserIDclient);
+                userIDQuery.setInt(2, UserIDclient);
+                userIDQuery.execute();
 
                 List<Integer> UserIDs = new ArrayList<Integer>();
 
                 int rsCount =  0;
-                boolean results2  =  ps2.execute();
-                while (results2) {
-                    if (results2) {
-                        ResultSet rs = ps2.getResultSet();
+                boolean userIDResults  =  userIDQuery.execute();
+                while (userIDResults) {
+                    if (userIDResults) {
+                        ResultSet rs = userIDQuery.getResultSet();
                         rsCount++;
                         while (rs.next()) {
                             System.out.println(rs.getInt("UserID"));
                             UserIDs.add(rs.getInt("UserID"));
                         }
                     }
-                    results2 = ps2.getMoreResults();
+                    userIDResults = userIDQuery.getMoreResults();
                 }
 
 
-                PreparedStatement ps3 = Main.db.prepareStatement("UPDATE Users SET Turn = ? WHERE UserID = ?");
-                ps3.setInt(1, 1);
-                ps3.setInt(2, UserIDclient);
-                ps3.execute();
+                PreparedStatement updateTurn = Main.db.prepareStatement("UPDATE Users SET Turn = ? WHERE UserID = ?");
+                updateTurn.setInt(1, 1);
+                updateTurn.setInt(2, UserIDclient);
+                updateTurn.execute();
 
                 for (int i=1; i<numberOfPeople;i++) {
-                    PreparedStatement ps4 = Main.db.prepareStatement("UPDATE Users SET Turn = ? WHERE UserID = ?");
-                    ps4.setInt(1, i+1);
-                    ps4.setInt(2, UserIDs.get(i-1));
-                    ps4.execute();
+                    updateTurn = Main.db.prepareStatement("UPDATE Users SET Turn = ? WHERE UserID = ?");
+                    updateTurn.setInt(1, i+1);
+                    updateTurn.setInt(2, UserIDs.get(i-1));
+                    updateTurn.execute();
 
 
                 }

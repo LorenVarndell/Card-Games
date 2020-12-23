@@ -76,7 +76,7 @@ cropped1 {
 
 
 .start {
-   display:block;
+   display:none;
    font-size: 50px;
    position: absolute;
    top: 400px;
@@ -97,7 +97,69 @@ cropped1 {
    z-index: 1;
    position: relative;
    top: 400px;
-   left: 30%;
+   left: 50%;
+   transform: translate(-500px, -50%);
+   user-select: none;
+}
+.sessionID {
+   display:block;
+   font-size: 25px;
+   position: absolute;
+   top: 75px;
+   text-align: center;
+   left: 50%;
    transform: translate(-50%, -50%);
+   width: 350px;
+   color: black;
+   font-family: fantasy;
+}
+
+.bridgePlayerView {
+   display: inline;
+   width: 55px;
+   height: 79px;
+   z-index: 1;
+   position: relative;
+   top: 700px;
+   left: 50%;
+   transform: translate(-375px, -50%);
+   user-select: none;
+}
+
+.bridgeTeamView {
+   display: inline;
+   width: 55px;
+   height: 79px;
+   z-index: 1;
+   position: relative;
+   top: 150px;
+   left: 50%;
+   transform: translate(-375px, -50%);
+   user-select: none;
+}
+
+.sideCards1 {
+   top: 425px;
+   display: block;
+   z-index: 1;
+   position: absolute;
+   left: 50%;
+   transform: translate(-675px, -50%) rotate(270deg);
+}
+
+.sideCards2 {
+   top: 425px;
+   display: block;
+   z-index: 1;
+   position: absolute;
+   left: 50%;
+   transform: translate(275px, -50%) rotate(270deg);
+}
+
+.bridgeEnemyView {
+   width: 31px;
+   height: 45px;
+   display: inline;
+   position: relative;
    user-select: none;
 }
